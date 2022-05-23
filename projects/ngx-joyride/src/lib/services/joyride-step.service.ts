@@ -108,8 +108,7 @@ export class JoyrideStepService implements IJoyrideStepService {
     private async navigateToStepPage(action: StepActionType): Promise<boolean> {
         let stepRoute = this.stepsContainerService.getStepRoute(action);
         if (stepRoute) {
-            await this.router.navigate([stepRoute]);
-            return true;
+            return await this.router.navigate([stepRoute]);
         }
         return false;
     }
