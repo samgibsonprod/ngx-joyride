@@ -105,11 +105,13 @@ export class JoyrideStepService implements IJoyrideStepService {
         this.tryShowStep(StepActionType.NEXT);
     }
 
-    private async navigateToStepPage(action: StepActionType) {
+    private async navigateToStepPage(action: StepActionType): Promise<boolean> {
         let stepRoute = this.stepsContainerService.getStepRoute(action);
         if (stepRoute) {
-            return await this.router.navigate([stepRoute]);
+            await this.router.navigate([stepRoute]);
+            return true;
         }
+        return false;
     }
 
     private subscribeToStepsUpdates() {
@@ -121,8 +123,12 @@ export class JoyrideStepService implements IJoyrideStepService {
     }
 
     private async tryShowStep(actionType: StepActionType) {
-        await this.navigateToStepPage(actionType);
-        const timeout = this.optionsService.getWaitingTime();
+        const didNavigate = await this.navigateToStepPage(actionType);
+        const timeoutAfterNavigation = this.optionsService.getWaitingTimeAfterNavigation();
+        let timeout = this.optionsService.getWaitingTime();
+        if (didNavigate && timeoutAfterNavigation) {
+            timeout = timeoutAfterNavigation;
+        }
         if (timeout > 100) this.backDropService.remove();
         setTimeout(() => {
             try {
