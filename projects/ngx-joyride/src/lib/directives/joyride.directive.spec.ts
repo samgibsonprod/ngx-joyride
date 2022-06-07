@@ -214,19 +214,6 @@ describe('JorideDirective', () => {
                 joyDirective['platformId'] = 'browser';
             });
 
-            it('should throw a JoyrideError if the step name is not defined', () => {
-                joyDirective.name = undefined;
-                expect(() => joyDirective.ngAfterViewInit()).toThrowError(
-                    "All the steps should have the 'joyrideStep' property set with a custom name."
-                );
-            });
-
-            it('should NOT throw a JoyrideError if the step name is defined', () => {
-                joyDirective.name = 'pippo';
-
-                expect(() => joyDirective.ngAfterViewInit()).not.toThrow();
-            });
-
             it('should set the prev template if it is defined', () => {
                 joyDirective.name = 'pippo';
                 joyDirective.prevTemplate = <TemplateRef<any>>{};

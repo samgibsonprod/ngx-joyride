@@ -100,7 +100,7 @@ export class JoyrideDirective implements AfterViewInit, OnChanges, OnDestroy {
         this.step.nextClicked = this.next;
         this.step.prevCliked = this.prev;
         this.step.tourDone = this.done;
-        if (!this.name) throw new JoyrideError("All the steps should have the 'joyrideStep' property set with a custom name.");
+        if (!this.name) return;
         this.step.name = this.name;
         this.step.route = this.router.url.substr(0, 1) === '/' ? this.router.url.substr(1) : this.router.url;
         this.step.transformCssStyle = this.windowRef.getComputedStyle(this.viewContainerRef.element.nativeElement).transform;
