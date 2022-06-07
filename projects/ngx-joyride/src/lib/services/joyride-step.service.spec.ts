@@ -202,11 +202,14 @@ describe('JoyrideStepService', () => {
         });
 
         it('should navigate to the step route if the step has a route', fakeAsync(() => {
-            stepsContainerService.getStepRoute.and.returnValue('route1');
+            stepsContainerService.getStepRoute.and.returnValue({
+                routerLink: 'route1',
+                queryParams: null
+            });
             joyrideStepService.startTour();
             tick(DEFAULT_TIMEOUT_BETWEEN_STEPS);
 
-            expect(router.navigate).toHaveBeenCalledWith(['route1']);
+            expect(router.navigate).toHaveBeenCalledWith(['route1'], {queryParams: null});
         }));
 
         it('should NOT navigate to the step route if the step does not have a route', fakeAsync(() => {

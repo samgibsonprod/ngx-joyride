@@ -8,6 +8,7 @@ import { JoyrideOptionsServiceFake } from '../test/fake/joyride-options-fake.ser
 import { JoyrideStep } from '../models/joyride-step.class';
 import { LoggerFake } from '../test/fake/logger-fake.service';
 import { LoggerService } from './logger.service';
+import { StepRoute } from '../models/joyride-step-route.class'
 
 describe('JoyrideStepsContainerService', () => {
     let joyrideOptionsService: JoyrideOptionsServiceFake;
@@ -328,7 +329,8 @@ describe('JoyrideStepsContainerService', () => {
             joyrideOptionsService.getStepsOrder.and.returnValue([
                 'step1@url1',
                 'step2@url2',
-                'step3@url3'
+                'step3@url3?queryparam=test', 
+                'step4@url4'
             ]);
         });
 
@@ -336,10 +338,10 @@ describe('JoyrideStepsContainerService', () => {
             joyrideStepsContainerService.init();
 
             expect(
-                joyrideStepsContainerService.getStepRoute(StepActionType.NEXT)
+                joyrideStepsContainerService.getStepRoute(StepActionType.NEXT).routerLink
             ).toBe('url1');
             expect(
-                joyrideStepsContainerService.getStepRoute(StepActionType.NEXT)
+                joyrideStepsContainerService.getStepRoute(StepActionType.NEXT).routerLink
             ).toBe('url1');
         });
 
@@ -348,16 +350,21 @@ describe('JoyrideStepsContainerService', () => {
             joyrideStepsContainerService.init();
 
             expect(
-                joyrideStepsContainerService.getStepRoute(StepActionType.NEXT)
+                joyrideStepsContainerService.getStepRoute(StepActionType.NEXT).routerLink
             ).toBe('url2');
         });
 
-        it('should return an empty string if the first call is PREV', () => {
+        it('should return correct value for queryparam', () => {
+            joyrideOptionsService.getFirstStep.and.returnValue('step3@url3?queryparam=test');
+            joyrideStepsContainerService.init(); 
+
+            expect(joyrideStepsContainerService.getStepRoute(StepActionType.NEXT).queryParams.queryparam).toBe('test');
+        });
+
+        it('should return an empty routerLink if the first call is PREV', () => {
             joyrideStepsContainerService.init();
 
-            expect(
-                joyrideStepsContainerService.getStepRoute(StepActionType.PREV)
-            ).toBe('');
+            expect(joyrideStepsContainerService.getStepRoute(StepActionType.PREV).routerLink).toBe('');
         });
     });
 });
